@@ -1,5 +1,33 @@
 Squash NEWS
 
+Changes in version 1.0.6 (2014-08-04)
+
+- Minor documentation adjustments to address CRAN check complaints
+
+
+Changes in version 1.0.5 (2012-10-11)
+
+- Fixed a bug in "prettyInt" that caused it to return a single value for cases such as "prettyInt(1, n = 10)"
+- Fixed a bug in "prettyLog" that caused an error for "prettyLog(0)"
+- Fixed a bug in "makecmap" which was introduced in version 1.02 and caused the color map to fail to cover the range of values of x, in certain cases.
+
+
+Changes in version 1.0.4 (2012-09-05)
+
+- "colorgram" now has an argument "symm".
+
+
+Changes in version 1.0.3 (2012-05-23)
+
+- In "colorgram", the argument "key.args" produces an error if it includes "title" or "map", because the "title" and "map" should be specified elsewhere. The error is now slightly more informative.
+
+
+Changes in version 1.0.2 (2012-01-18)
+
+- Minor documentation fixes
+- Simplification and bugfixes in "makecmap"
+- Added a (default) NAMESPACE file
+
 
 Changes in version 1.0.1 (2011-08-15)
 

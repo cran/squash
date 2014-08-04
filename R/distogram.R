@@ -2,6 +2,7 @@
 #
 # Aron Eklund
 #
+# A part of the "squash" R package
 
 
 diamond <- function(x, y = NULL, radius, ...) {

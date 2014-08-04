@@ -54,7 +54,8 @@ Custom palettes can be generated with \code{\link[grDevices]{colorRamp}}.
 \examples{
 
 ## Present the squash palettes along with the built-in R palettes
-squash.palettes <- c('rainbow2', 'jet', 'grayscale', 'heat', 'coolheat', 'blueorange', 'bluered', 'darkbluered')
+squash.palettes <- c('rainbow2', 'jet', 'grayscale', 'heat', 
+                     'coolheat', 'blueorange', 'bluered', 'darkbluered')
 R.palettes <- c('rainbow', 'heat.colors', 'terrain.colors', 'topo.colors', 'cm.colors')
 
 plot(0:8, type = 'n', ann = FALSE, axes = FALSE)

@@ -46,25 +46,26 @@ The package \pkg{pixmap} may be more suitable for plotting images that are not d
 }
 \examples{
 
-  ## visualize nearly all built-in R colors
+  ## Visualize nearly all built-in R colors
   color.mat <- matrix(colors()[1:625], nrow = 25)
   cimage(zcol = color.mat)
 
-  ## an example using "zsize"
+  ## An example using "zsize"
   x <- y <- 1:10
   zcolor <- matrix( rainbow(100)[outer(x, y)], nrow = 10 )
   zsize <- matrix( runif(100), nrow = 10 )
   cimage(x, y, zcol = zcolor, zsize = zsize)
 
-  ## another simple example
+  ## Another simple example
   red <- green <- 0:255
   rg <- outer(red, green, rgb, blue = 1, maxColorValue = 255)
   cimage(red, green, zcol = rg)
   
-  ## same, but using useRaster (resulting in faster image generation, and smaller file size if saved as a PDF)
+  ## The same, but using useRaster (resulting in faster image generation, 
+  ## and smaller file size if saved as a PDF)
   cimage(red, green, zcol = rg, useRaster = TRUE)
 
-  ## an example with categorical axes
+  ## An example with categorical axes
   colormixer <- function(x, y) {
       r <- (col2rgb(x) + col2rgb(y)) / 2
       rgb(as.data.frame(t(r)), maxColorValue = 255)
@@ -77,7 +78,7 @@ The package \pkg{pixmap} may be more suitable for plotting images that are not d
   cimage(zcol = mix, xlabels = x, ylabels = y, xlab = NA, ylab = NA)
   par(op)
   
-  ## an example with nonuniform midpoints and breakpoints
+  ## An example with non-uniform midpoints and breakpoints
   rg2 <- rg[seq(1, 255, by = 62), seq(1, 255, by = 62)]
   cimage(x = (1:5)^2, y = c(3, 5, 6, 9, 10, 11), zcol = rg2, 
          zsize = matrix(runif(25, min = 0.5), nrow = 5))

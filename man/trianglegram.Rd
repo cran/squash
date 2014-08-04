@@ -19,6 +19,7 @@ trianglegram(x, labels = rownames(x),
   \item{\dots}{ Further arguments passed to \code{\link{plot}}. }
 }
 \details{ 
+The input must be a (square) matrix; however, only part of the matrix (the upper or lower triangle) is displayed.
 }
 \value{ none. }
 \seealso{ \code{\link{distogram}}, \code{\link{corrogram}} }

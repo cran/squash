@@ -11,15 +11,15 @@ prettyLog(x, n = 5, small = NA, logrange = c(-100, 100))
 \arguments{
   \item{x}{ Numeric vector. }
   \item{n}{ Approximate number of values to return. }
-  \item{small}{ No. }
+  \item{small}{ Value below which distinction from zero is unimportant. }
   \item{logrange}{ Log (base 10) of the range of values to consider as possible breakpoints. }
   \item{\dots}{ Further arguments passed to \code{\link{pretty}}. }
 }
 \details{ 
-\code{prettyInt} returns integer values, even if this forces the number of values returned to be much lower than the requested number \code{n}.
+\code{prettyInt} returns integer values, even if this forces the number of values returned to be much lower than the requested number \code{n}. However, at least two values will be returned.
 
 \code{prettyLog} returns values that are approximately evenly spaced on a log scale, such as (1, 3, 10, 30, ...) or (1, 2, 5, 10, 20, 50, ...) or (1, 10, 100, ...).  
-Negative or zero values in \code{x} are accomodated by series such as (-100, -10, -1, 0, 1, 10, 100, ...). Setting the parameter \code{small} to a non-\code{NA} value will ignore \code{x} values below \code{abs(small)}. 
+Negative or zero values in \code{x} are accomodated by series such as (-100, -10, -1, 0, 1, 10, 100, ...). Setting the parameter \code{small} to a non-\code{NA} value will ignore \code{x} with absolute values below \code{small}. 
 
 }
 \value{ A numeric vector. }

@@ -1,7 +1,7 @@
 \name{distogram}
 \alias{distogram}
 \title{ Draw a color-coded triangular distance matrix }
-\description{ This figure is a color-coded, rotated triangular matrix indicating the distance between every pair of items. }
+\description{ This function draws a color-coded, rotated triangular matrix indicating the "distance" between every pair of items. }
 \usage{
 distogram(x, map, 
   n = 10, base = NA, colFn = heat, 
@@ -16,15 +16,15 @@ distogram(x, map,
   \item{\dots}{ Further arguments passed to \code{\link{trianglegram}}, (e.g. \code{labels}). }
 }
 \details{ 
-
+If the input \code{x} is a matrix, the lower triangle is extracted by default (but see the arguments for \code{\link{trianglegram}}).
 }
 \value{ The color map, invisibly. }
 \seealso{ \code{\link{corrogram}} }
 \examples{ 
-  ## default
+  ## Distances between European cities
   distogram(eurodist, title = 'Distance (km)')  
 
-  ## variations
+  ## Some variations
   map <- distogram(eurodist, key = FALSE, colFn = jet, right = TRUE)  
   vkey(map, title = 'Distance (km)', x = -8)
 

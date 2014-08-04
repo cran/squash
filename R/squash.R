@@ -2,7 +2,7 @@
 #
 # Aron Charles Eklund
 #
-# source("~/aron/chb/projects/R/packages/squash/R/squash.R")
+# A part of the "squash" R package
 
 
 ######### color palettes ###########
@@ -29,6 +29,20 @@ coolheat <- colorRampPalette(c('cyan', '#00A5FF', '#00008B', 'black', 'black', '
 
 ######### essential color mapping functions ###########
 
+.extendrange2 <- function (x, r = range(x, na.rm = TRUE), f = 0.05) 
+{
+    if (!missing(r) && length(r) != 2) 
+        stop("'r' must be a \"range\", hence of length 2")
+    if(all(r == 0))
+      return(c(-f, f))
+    if(r[1] == r[2]) {
+     return(r + c(-f, f) * r[1])
+    } else {
+     return(r + c(-f, f) * diff(r))
+    }
+}
+
+
 makecmap <- function(x, n = 10, 
     breaks = pretty, symm = FALSE, base = NA, 
     colFn = jet, col.na = NA,
@@ -41,33 +55,24 @@ makecmap <- function(x, n = 10,
     if(!is.na(base)) {
       x <- log(x, base = base)
     }
+    ## define "lim" to extend the range if necessary:
     lim <- range(x, finite = TRUE)
-    if(lim[1] == lim[2]) {      ## special case
-      if(right) {
-        breakpoints <- c(lim[1] - 1, lim[1])
-      } else {
-        breakpoints <- c(lim[1], lim[1] + 1)
-      }
-    } else {                    ## end special case
-      if(!include.lowest) {
-        if(right) 
-          lim[1] <- extendrange(r = lim, f = 0.001)[1]
-        else
-          lim[2] <- extendrange(r = lim, f = 0.001)[2]
-      }  
-      if(symm) {
-        maxabs <- max(abs(lim))
-        lim <- c(-maxabs, maxabs)
-      }
-      if(max(abs(lim)) > 0)
-        lim[3] <- sign(lim[1]) * min(abs(x)[x != 0])  ## include the smallest non-zero value in case "prettyLog" is used
-      breakpoints <- breaks(lim, n = n, ...)
-      if(!is.na(base)) {
-        breakpoints <- base ^ breakpoints
-      }  
+    if(!include.lowest) {
+      if(right) 
+        lim[1] <- .extendrange2(r = lim, f = 0.001)[1]
+      else
+        lim[2] <- .extendrange2(r = lim, f = 0.001)[2]
+    }  
+    if(symm) {
+      maxabs <- max(abs(lim))
+      lim <- c(-maxabs, maxabs)
     }
-  } else {                                        ## Breakpoints are supplied
-    breakpoints = breaks
+    breakpoints <- breaks(c(x, lim), n = n, ...)
+    if(!is.na(base)) {
+      breakpoints <- base ^ breakpoints
+    }  
+  } else {                         ## Breakpoints were supplied
+    breakpoints <- breaks
   }
   if (length(breakpoints) < 2)
     stop("there must be at least two breakpoints")
@@ -102,35 +107,40 @@ cmap <- function(x, map, outlier = NULL, ...) {
 
 ######### functions similar to "pretty" ###########
 
+
 prettyInt <- function(x, n = 5, ...) {
   x <- x[is.finite(x <- as.numeric(x))]
   if (length(x) == 0L) return(x)
   r <- range(x)
-  r.adj <- c(floor(r[1]), ceiling(r[2]))
+  if (r[2L] == r[1L]) n <- 5  ## preempts certain problems
+  r.adj <- c(floor(r[1L]), ceiling(r[2L]))
   p <- pretty(r.adj, n = n, ...)
-  sort(unique(as.integer(round(p))))
+  unique(as.integer(round(p)))
 }
+
+
 
 prettyLog <- function(x, n = 5, small = NA, 
      logrange = c(-100, 100)) {
   x <- x[is.finite(x <- as.numeric(x))]
   if (length(x) == 0L) return(x)
   r <- range(x)
-  rmin <- range(abs(x[x != 0]), finite = TRUE)[1]
+  if(all(r == 0)) return(pretty(0))
+  rmin <- range(abs(x[x != 0]), finite = TRUE)[1L]
   if(!is.na(small))
     rmin <- max(rmin, small) 
-  expVals <- seq(logrange[1], logrange[2])
+  expVals <- seq(logrange[1L], logrange[2L])
   ## narrow down candidate sequences one step at a time
-  cand <- list(base2 = c(1, 2, 5) * 10 ^ rep(expVals, each = 3),
-               base3 = c(1, 3) * 10 ^ rep(expVals, each = 2),
+  cand <- list(base2 = c(1, 2, 5) * 10 ^ rep(expVals, each = 3L),
+               base3 = c(1, 3) * 10 ^ rep(expVals, each = 2L),
                base10 = 10 ^ rep(expVals))
-  cand2 <- lapply(cand, function(y) y[(which(y > rmin)[1] - 1):length(y)])
+  cand2 <- lapply(cand, function(y) y[(which(y > rmin)[1L] - 1L):length(y)])
   cand3 <- lapply(cand2, function(y) c(sort(-y), 0, y))
-  cand4 <- lapply(cand3, function(y) y[(which(y > r[1])[1] - 1):(which(y >= r[2])[1])])
+  cand4 <- lapply(cand3, function(y) y[(which(y > r[1L])[1L] - 1L):(which(y >= r[2L])[1L])])
   out.len <- sapply(cand4, length)
   wh <- which.min(abs(out.len - n))
   cand5 <- cand4[[wh]]
-  if(length(cand5) == 1) {
+  if(length(cand5) == 1L) {
     if(cand5 > 0) return(c(0, cand5))
     if(cand5 < 0) return (c(cand5, 0))
     if(cand5 == 0) return (c(-1, 0))
@@ -340,7 +350,7 @@ cimage <- function(x = NULL, y = NULL, zcol = NULL, zsize = 1,
 
 
 colorgram <- function(x = NULL, y = NULL, z = NULL, zsize = 1, 
-    map, nz = 10, breaks = pretty, base = NA, colFn = jet,
+    map, nz = 10, breaks = pretty, symm = FALSE, base = NA, colFn = jet,
     key = hkey, key.args = list(), 
     xlab = NULL, ylab = NULL, zlab = NULL, 
     outlier = NULL, ...) {
@@ -349,13 +359,19 @@ colorgram <- function(x = NULL, y = NULL, z = NULL, zsize = 1,
     xds = deparse(substitute(x)), yds = deparse(substitute(y)), 
     zds = deparse(substitute(z)))
   if(missing(map)) {
-    map <- makecmap(xyzmat$z, n = nz, breaks = breaks, base = base, colFn = colFn)
+    map <- makecmap(xyzmat$z, n = nz, breaks = breaks, 
+      symm = symm, base = base, colFn = colFn)
   }
   zcol <- cmap(xyzmat$z, map = map, outlier = outlier)
   cimage(x = xyzmat$x, y = xyzmat$y, zcol = zcol, zsize = zsize, 
     xlab = xyzmat$xlab, ylab = xyzmat$ylab, ... )
-  if(is.function(key) || is.character(key))
+  if(is.function(key) || is.character(key)) {
+    if('title' %in% names(key.args))
+      stop('the color key title cannot be specified in "key.args"; please set "zlab" instead')
+    if('map' %in% names(key.args))
+      stop('the color map cannot be specified in "key.args"; please set "map" directly')
     do.call(key, args = c(list(map = map, title = xyzmat$zlab), key.args))
+  }
   invisible(map)
 }  
 
